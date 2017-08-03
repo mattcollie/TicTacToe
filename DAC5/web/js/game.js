@@ -2,18 +2,24 @@
     function TicTacToe() {
         const ROWS = 3,
               COLS = 3,
-              PLAYER_CHARACTERS = ['X','O'];
+              WIDTH = 500,
+              HEIGHT = 500,
+              CELL_COLOUR = '#FFFF66',
+              PLAYER_CHARACTERS = ['X','O'],
+              IN_ROW_TO_WIN = 3;
         var _container,
+        currentPoint = 0,
         _game = {
             get container() {
                 if(!_container)
-                    _container = createElement('div', {}, {'background-color':'black',width:500,height:500}, {type:'click', callback: function() {
-                        alert('clicked')
-                    }})
+                    _container = createElement('div', {}, {'background-color':'black',width:WIDTH,height:HEIGHT}, {type:'click', callback: function() {}})
                 return _container;
-            },
-            grid: createGrid(),
-            state:{}
+            }
+        };
+
+        _game.grid = createGrid();
+        _game.state = {
+            turn: PLAYER_CHARACTERS[(currentPoint++%PLAYER_CHARACTERS.length)]
         };
 
 
@@ -21,30 +27,41 @@
         attachToBody(_game.container);
         return _game;
 
-        function createGrid() {
-            let grid = [];
+        function validateClick(x, y) {
+            console.log(_game.state.turn);
+        }
 
+        function createGrid() {
+            let grid = [], table = createElement('table');
             for(let row = 0; row < ROWS; row++) {
                 grid[row] = [];
+                let tr = createElement('tr');
                 for(let col = 0; col < COLS; col++) {
-                    grid[row][col] = new Cell(row, col, cellClicked(row, col));
-                    _game.container.appendChild(grid[row][col].container);
+                    grid[row][col] = new Cell(row, col, cellClicked(row, col), {}, {'background-color':CELL_COLOUR,width:WIDTH/ROWS-(WIDTH*.01), height: HEIGHT/COLS-(HEIGHT*.01), left: 'float'});
+                    let td = createElement('td');
+                    td.appendChild(grid[row][col].container);
+                    tr.appendChild(td);
                 }
+                table.appendChild(tr);
             }
-
+            _game.container.appendChild(table);
             return grid;
         }
 
         function cellClicked(x, y) {
             return function() {
-                alert('cell: ' + x + ', ' + y + ' clicked');
+                validateClick(x, y);
+                //alert('cell: ' + x + ', ' + y + ' clicked');
             }
         }
     }
 
-    function Cell(x, y, callback) {
-        var _cell = {container: createElement('div', {}, {'background-color':'yellow',width:50, height: 50, left: 'float'}, {type:'click',callback})};
-
+    function Cell(x, y, callback, attributes = {}, styles = {}) {
+        var _cell = {
+            x: x,
+            y: y,
+            container: createElement('div', attributes, styles, {type:'click',callback})
+        };
         return _cell;
     }
 
@@ -71,7 +88,8 @@
     }
 
     function addEvent(element, event) {
-        element.addEventListener(event.type, event.callback);
+        if(event)
+            element.addEventListener(event.type, event.callback);
     }
 
     function attachToBody(container) {
