@@ -29,6 +29,10 @@
         attachToBody(_game.container);
         return _game;
 
+        function checkFinish() {
+
+        }
+
         function validateClick(x, y) {
             if(!_game.grid[x][y].container.textContent) {
                 _game.grid[x][y].container.textContent = _game.state.turn;
@@ -54,8 +58,13 @@
 
         function cellClicked(x, y) {
             return function() {
-                validateClick(x, y);
-                //alert('cell: ' + x + ', ' + y + ' clicked');
+                if(!checkFinish()) {
+                    validateClick(x, y);
+                    //alert('cell: ' + x + ', ' + y + ' clicked');
+                }
+                else {
+                    // finished
+                }
             }
         }
     }
