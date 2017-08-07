@@ -19,7 +19,9 @@
 
         _game.grid = createGrid();
         _game.state = {
-            turn: PLAYER_CHARACTERS[(currentPoint++%PLAYER_CHARACTERS.length)]
+            get turn() {
+                return PLAYER_CHARACTERS[(currentPoint++%PLAYER_CHARACTERS.length)];
+            }
         };
 
 
@@ -28,7 +30,9 @@
         return _game;
 
         function validateClick(x, y) {
-            console.log(_game.state.turn);
+            if(!_game.grid[x][y].container.textContent) {
+                _game.grid[x][y].container.textContent = _game.state.turn;
+            }
         }
 
         function createGrid() {
