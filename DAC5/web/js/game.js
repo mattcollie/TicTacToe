@@ -30,12 +30,14 @@
         return _game;
 
         function checkFinish() {
-
+            console.log(flatten(_game.grid));
         }
 
         function validateClick(x, y) {
             if(!_game.grid[x][y].container.textContent) {
-                _game.grid[x][y].container.textContent = _game.state.turn;
+                var player = _game.state.turn;
+                _game.grid[x][y].container.textContent = player;
+                _game.grid[x][y].player = player;
             }
         }
 
@@ -67,6 +69,10 @@
                 }
             }
         }
+    }
+
+    function flatten(arr) {
+        return arr.reduce((c,p)=>c.concat(p));
     }
 
     function Cell(x, y, callback, attributes = {}, styles = {}) {
